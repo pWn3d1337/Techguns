@@ -1,0 +1,16 @@
+[
+{
+  "modid": "Techguns",
+  "name": "Techguns",
+  "description": "Techguns",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["pWn3d_1337, Th3_St4lk3r"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

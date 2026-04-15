@@ -1,0 +1,48 @@
+package techguns.client;
+
+/**
+ * Container class to group all values for recoil/reload timing together
+ * used for storing in hashmap
+ */
+public class AttackTime {
+	private long reloadTime=0;
+	private int reloadTimeTotal=0;
+	private long recoilTime=0;
+	private int recoilTimeTotal=0;
+	private byte attackType=0;
+	
+	
+	
+	
+	public long getReloadTime() {
+		return reloadTime;
+	}
+	public void setReloadTime(long reloadTime) {
+		this.reloadTime = reloadTime;
+	}
+	public int getReloadTimeTotal() {
+		return reloadTimeTotal;
+	}
+	public void setReloadTimeTotal(int reloadTimeTotal) {
+		this.reloadTimeTotal = reloadTimeTotal;
+	}
+	public long getRecoilTime() {
+		return recoilTime;
+	}
+	public void setRecoilTime(long recoilTime) {
+		this.recoilTime = recoilTime;
+	}
+	public int getRecoilTimeTotal() {
+		return recoilTimeTotal;
+	}
+	public void setRecoilTimeTotal(int recoilTimeTotal) {
+		this.recoilTimeTotal = recoilTimeTotal;
+	}
+	public byte getAttackType() {
+		return attackType;
+	}
+	public void setAttackType(byte attackType) {
+		this.attackType = attackType;
+	}
+
+}

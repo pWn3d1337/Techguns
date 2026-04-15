@@ -1,0 +1,59 @@
+package techguns.items.guns;
+
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import techguns.TGPackets;
+import techguns.damagesystem.DamageType;
+import techguns.entities.projectiles.AlienBlasterProjectile;
+import techguns.extendedproperties.TechgunsExtendedPlayerProperties;
+import techguns.packets.PacketSpawnParticleOnEntity;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+
+public class AlienBlaster extends GenericGun {
+
+	public AlienBlaster() {
+		super();
+	}
+
+	public AlienBlaster(ItemStack ammo) {
+		super(ammo);
+	}
+
+	public AlienBlaster(String name, ItemStack ammo, boolean semiAuto,
+			int minFiretime, int clipsize, int reloadtime, float damage,
+			String firesound, String reloadsound, int TTL, float accuracy) {
+		super(name, ammo, semiAuto, minFiretime, clipsize, reloadtime, damage,
+				firesound, reloadsound, TTL, accuracy);
+	}
+
+	/* (non-Javadoc)
+	 * @see techguns.items.guns.GenericGun#spawnProjectile(net.minecraft.world.World, net.minecraft.entity.EntityLivingBase, net.minecraft.item.ItemStack, float, float, float)
+	 */
+	@Override
+	protected void spawnProjectile(World world, EntityLivingBase player,
+			ItemStack itemstack, float spread, float offset, float damagebonus, boolean leftGun) {
+		
+		boolean ignite=false;
+		if (player instanceof EntityPlayer){
+			TechgunsExtendedPlayerProperties props = TechgunsExtendedPlayerProperties.get((EntityPlayer) player);
+			if(props!=null){
+				ignite=!props.enableSafemode;
+			}
+		}
+		
+		Entity ent = new AlienBlasterProjectile(world, player, damage*damagebonus, speed, this.ticksToLive, spread, this.damageDropStart, this.damageDropEnd, this.damageMin*damagebonus,ignite, this.penetration,getDoBlockDamage(player));
+		world.spawnEntityInWorld(ent);
+		TGPackets.network.sendToAllAround(new PacketSpawnParticleOnEntity("AlienBlasterTrail", ent), new TargetPoint(world.provider.dimensionId, ent.posX, ent.posY, ent.posZ, 200.0f));
+	}
+
+
+	@Override
+	public DamageType getDamageType() {
+		return DamageType.FIRE;
+	}
+	
+	
+}

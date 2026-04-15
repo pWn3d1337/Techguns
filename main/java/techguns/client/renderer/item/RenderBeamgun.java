@@ -1,0 +1,142 @@
+
+package techguns.client.renderer.item;
+
+import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+
+import techguns.client.models.ModelMultipart;
+import techguns.client.renderer.TGRenderHelper;
+import techguns.client.renderer.FX.ScreenEffect;
+
+public class RenderBeamgun extends RenderGunBase {
+
+	public RenderBeamgun(ModelMultipart model, ResourceLocation texture,
+			float scale, float x, float y, float z) {
+		super(model, texture, scale, x, y, z,true,true,1,false);
+	}
+
+	@Override
+	protected void GL_Transform_FirstPerson(int part,float prog, byte attackType) {
+		GL11.glRotatef(180, 1.0f, 0, 0);
+		GL11.glRotatef(-45, 0, 1.0f, 0);
+		GL11.glScalef(1.1f, 1.1f, 1.1f);
+		GL_Transform_Translate(part);
+		//GL11.glTranslatef(0.0f, 0.0f, 0.0f);
+	}
+
+	@Override
+	protected void GL_Transform_Equipped(int part,float prog, byte attackType) {
+		GL11.glRotatef(180, 1.0f, 0, 0);
+		GL11.glRotatef(225, 0, 1.0f, 0);
+		//GL11.glRotatef(90, 0, 0, 1.0f);
+		GL11.glScalef(1.25f, 1.25f, 1.25f);
+		GL11.glTranslated(-0.7f, -0.6f, 0.1f);
+	}
+
+	@Override
+	protected void GL_Transform_Ground(int part) {
+		GL11.glRotatef(180, 1.0f, 0, 0);
+		GL11.glRotatef(90, 0, 1.0f, 0);
+		//GL11.glTranslatef(0.0f, 0f, 0.0f);
+		GL11.glScalef(0.75f, 0.75f, 0.75f);
+		GL11.glTranslatef(0.6f, -0.2f, 0);
+	}
+
+	@Override
+	protected void GL_Transform_reloading(int part,float prog, byte attackType) {
+		//float y = Math.min(0.5f,(Math.abs((0.5f-prog))-0.5f)*2f);
+		float y = ((float) Math.min(0.66f,Math.sin(prog*Math.PI))*1.5f);
+		GL11.glRotatef(20.0f*y, 0, 0, 1.0f);
+		GL11.glRotatef(10.0f*-y, 0f, 1.0f, 0f);
+		//GL11.glRotatef(10.0f*y, 1.0f, 0f, 0f);
+		GL_Transform_Translate(part);
+		GL11.glTranslatef((y*0.5f), (y*0.25f), (y*0.25f));
+	}
+
+	/*@Override
+	protected void GL_Transform_reload_done() {
+		//GL11.glTranslatef(0.1f, 0, -0.5f);
+		GL_Transform_Translate();
+	}*/
+
+	@Override
+	protected void GL_Transform_Translate(int part) {
+		//GL11.glTranslated(Keybinds.X, Keybinds.Y, Keybinds.Z);
+		GL11.glTranslatef(0.2f, -0.5f, -0.2f);
+	}
+
+	@Override
+	protected void GL_Transform_firing(int part,float prog, byte attackType) {
+		//float y = Math.min(0.5f,(Math.abs((0.5f-prog))-0.5f));
+		float y = (float) Math.sin(prog*Math.PI*2.0);
+		GL_Transform_Translate(part);
+		GL11.glTranslatef((y*0.05f), y*0.025f, 0);
+		GL11.glRotatef(y*0.50f, 0, 0, 1.0f);
+	}
+
+	@Override
+	protected void drawMuzzleFX(float prog, byte attackType) {
+		                                           // -right, +near, ?
+		TGRenderHelper.enableAlphaBlendAdditive();
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		//ScreenEffect.muzzleFlashNukeBeam.doRender(prog, (float)Keybinds.X, (float)Keybinds.Y, (float)Keybinds.Z, 1.25f, 0, 90.0f, 0);
+		ScreenEffect.muzzleFlashNukeBeam.doRender(prog, -0.7f, -0.2f, -0.3f, 1.5f, 0, 90.0f, 0);
+		 GL11.glDisable(GL11.GL_ALPHA_TEST);
+		TGRenderHelper.disableAlphaBlend();
+	}
+
+	@Override
+	protected void GL_Transform_Icon(int part) {
+		GL11.glRotatef(180, 1.0f, 0, 0);
+		GL11.glRotatef(180, 0, 1.0f, 0);
+		GL11.glTranslatef(-0.1f, -0.3f, 0.4f);
+		//GL11.glTranslated(Keybinds.X, Keybinds.Y, Keybinds.Z);
+		GL11.glScalef(0.65f, 0.65f, 0.65f);
+	}
+
+	@Override
+	public void renderScope() {
+	}
+
+
+
+	@Override
+	protected void GL_TransformRecoil_Equipped(int part, float prog, byte attackType) {
+		float distance=-0.25f;
+		if(prog<0.5f){
+			/*float offsetX=-0.2f;
+			float offsetY=-0.1f;
+			GL11.glTranslatef(offsetX,offsetY, 0);*/
+				float progress=prog*2.0f;
+				
+				if(progress<0.25f){
+					//GL11.glRotatef(progress*4*degree, 0, 0, 1);
+					GL11.glTranslatef(progress*4*distance,0,0);
+				} else {
+					GL11.glTranslatef((1-progress)*1.25f*distance,0,0);
+					//GL11.glRotatef((1-progress)*1.25f*degree, 0, 0, 1);
+				}
+			//GL11.glTranslatef(-offsetX,-offsetY, 0);*/
+		}
+	}
+
+	@Override
+	protected void GL_TransformReload_Equipped(int part, float prog, byte attackType) {
+		float offsetX=-0.2f;
+		float offsetY=-0.1f;
+		GL11.glTranslatef(offsetX,offsetY, 0);
+		float y = Math.min(0.5f,(Math.abs((0.5f-prog))-0.5f)*2.0f);
+		GL11.glRotatef(-40.0f*y,0,0,1);
+		GL11.glRotatef(50.0f*y,0,1,0);
+		GL11.glTranslatef(-offsetX,-offsetY, 0);
+	}
+
+	@Override
+	protected void transformEquippedAimed(int part) {
+		super.transformEquippedAimed(part);
+		//GL11.glRotated(90.0f-21.0f, 0, 0, 1);
+		GL11.glTranslatef(0,0.1f,-0.2f);
+		//GL11.glTranslated(Keybinds.X, Keybinds.Y, Keybinds.Z);		
+	}
+}
